@@ -1,0 +1,223 @@
+\section{Going Fast}
+
+\begin{frame}[shrink,fragile]
+    \frametitle{Project 3}
+    Goal: Free up the CPU to do things besides wait to add samples to the FIFO.
+    \input{img/project3-resource-tree.latex}
+\end{frame}
+
+\subsection{Direct Memory Access}
+
+\begin{frame}{Using More Silicon on the SoC}
+    \begin{itemize}
+        \item In project 2, we only sent 64 samples out; it's time to make this thing stream.
+        \item We can add another master to the system bus called the Direct Memory Access Controller, or DMA.
+        \item the CPU quickly writes samples to system memory, and delegates writing samples into the FIFO to the DMA.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{System Memory}
+    \begin{example}
+        \begin{python}
+emc = Mem.create_and_connect('/soc', 'mem',
+        soc, width=32, depth=512)
+        \end{python}
+    \end{example}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{The Direct Memory Access Controller}
+    \begin{example}
+        \begin{python}
+dma = Dma.create_and_connect('/soc', 'dma', soc)
+dmaready = Flag.create_and_connect('/soc', 'dmaready')
+Dma.create_channel(dma, 'tx', dmaready))
+        \end{python}
+    \end{example}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Using DMA from the BFM}
+    \begin{example}
+        \begin{python}
+yield os.transmit(0x00020000, 0x00010000)  # Source
+yield os.transmit(0x00020004, 4)           # Source Incr
+yield os.transmit(0x00020008, 0x00000050)  # Dest
+yield os.transmit(0x0002000c, 0)           # Dest Incr
+yield os.transmit(0x00020010, 5)           # Count
+        \end{python}
+    \end{example}
+
+    \begin{itemize}
+        \item (0x00010000) $\rightarrow$ (0x00000050)
+        \item (0x00010004) $\rightarrow$ (0x00000050)
+        \item (0x00010008) $\rightarrow$ (0x00000050)
+        \item (0x0001000c) $\rightarrow$ (0x00000050)
+        \item (0x00010010) $\rightarrow$ (0x00000050)
+    \end{itemize}
+\end{frame}
+
+\subsection{Operating System}
+
+\begin{frame}{Operating the System}
+    \begin{definition}
+        The OperatingSystem is the root node of the whole system.
+        \begin{itemize}
+            \item It's aware of all the resources in the system.
+            \item It is the master controller of the simulations.
+            \item It maintains the context for each part of the system.
+        \end{itemize}
+    \end{definition}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{The Simulation}
+    \begin{example}
+        \begin{python}
+def simulation_script(os):
+    shared_addr = os.alloc("shared_memory", 4096)
+    os.cpu.store(shared_addr, 42)
+    assert os.cpu.load(shared_addr) == 42
+    os.free("shared_memory")
+    raise StopSimulation
+
+os.simulate("/soc/pbus/project3", simulation_script, "mysim")
+        \end{python}
+    \end{example}
+    Notice how the os knows which CPU is the current one, and it knows where and how to allocate memory for the given subsystem.
+\end{frame}
+
+\subsection{DSP on the CPU}
+
+\begin{frame}[fragile]
+    \frametitle{DSP Flowgraph on the CPU}
+    \begin{example}
+        \begin{python}
+cpu_dsp = DspFlowController.create_and_connect(
+        '/soc/cpu', 'daemon')
+net = DspFlow.create_net(dsp, 'signal', width=32, depth=512)
+        \end{python}
+    \end{example}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{The Flowgraph}
+    \begin{example}
+        \begin{python}
+signal_source = SignalSource.create_and_connect(
+        '/soc/cpu/daemon/dsp',
+        'signal_source', cpu_dsp, 'signal')
+dma_sink = DmaSink.create_and_connect(
+        '/soc/cpu/daemon/dsp',               
+        'dma_sink', cpu_dsp, 'signal')
+        \end{python}
+    \end{example}
+    \begin{center}
+        \begin{tikzpicture}[start chain, align=center]
+            \tikzstyle{block} = [on chain, join, draw];
+            \tikzstyle{net} = [on chain, join, circle, fill, inner sep=0pt, outer sep=0pt];
+            \node [block] {Signal\\Source};
+            \node [net] [label=signal] {};
+            \node [block, ->] {Dma\\Sink};
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Running the DSP Daemon}
+    \begin{example}
+        \begin{python}
+@system.model
+def test_project3():
+    ...
+    yield daemon.start()
+    ...
+    while True:
+        yield daemon.step()
+        if <some condition>:
+            raise StopSimulation
+        \end{python}
+    \end{example}
+\end{frame}
+
+\section{DSP In Practice}
+
+\subsection{Filtering}
+
+\begin{frame}[shrink=20,fragile]
+    \frametitle{Designing Filters with SciPy}
+    \begin{columns}
+        \begin{column}{.5\textwidth}
+            \begin{example}
+                \pythonexternal[lastline=15]{img/fir.py}
+            \end{example}
+        \end{column}
+        \begin{column}{.5\textwidth}
+            \includegraphics[width=.9\textwidth]{img/fir.png}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{The Frequency Response}
+    \begin{columns}
+        \begin{column}{.5\textwidth}
+            \begin{example}
+                \pythonexternal[firstline=25]{img/fir.py}
+            \end{example}
+        \end{column}
+        \begin{column}{.5\textwidth}
+            \includegraphics[width=.9\textwidth]{img/freq-response.png}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\subsection{Testing your DSP}
+
+\begin{frame}{The Impulse Response}
+    \begin{definition}
+        An \emph{Impulse} is like touching a hot wire on a signal path.  The \emph{Impulse Response} is what a system does to an impulse.  It's the \emph{fingerprint} of the system.
+    \end{definition}
+    \begin{center}
+        \begin{tikzpicture}
+            \draw[very thin,color=gray,->] (-0.2,0) -- (10.2,0) node[color=black, right] {$n$};
+            \draw[very thin,color=gray,->] (0,-1.2) -- (0,1.2) node[color=black, above] {$f[n]$};
+            \draw plot[ycomb,mark=*] coordinates {(0, 1) (1, 0) (2, 0) (3, 0) (4, 0) (5, 0) (6, 0) (7, 0) (8, 0) (9, 0) (10, 0)};
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}{The Impulse Response Test}
+    \begin{itemize}
+        \item FPGA simulations are not in real time
+        \item How do you know if your signal processing is working correctly?
+        \item Send it an impulse and verify the output matches the fingerprint
+        \item The fingerprint of a FIR filter is the filter taps!
+    \end{itemize}
+\end{frame}
+
+\subsection{Project 3}
+
+\begin{frame}[shrink=20]{Goal}
+    \begin{center}
+        \input{img/project3-resource-tree.latex}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Homework}
+    \begin{itemize}
+        \item Modify the FPGA DSP flowgraph to include a FIR filter;
+        \item Modify the FIR filter to load coefficients via a 2nd slave;
+        \item Confirm that the FIR filter works with an Impulse Reponse test.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Parting Thoughts}
+    \begin{itemize}
+        \item We saw all of the parts of a System on a Chip
+        \item We looked at how to use Python to glue a complex system together
+        \item We explored some basics of Digital Signal Processing and how to use it
+        \item Next up is to use these tools to build \emph{The HT of the Future}!
+    \end{itemize}
+\end{frame}

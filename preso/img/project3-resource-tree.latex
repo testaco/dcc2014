@@ -1,0 +1,41 @@
+\begin{tikzpicture}[align=center]
+\tikzstyle{every node} = [draw];
+\node (root) {root} [edge from parent fork down]
+     child { node (resetn) {resetn} }
+     child { node (clk) {clk} }
+     child { node (status_led) {status\\led} }
+     child { node (soc) {soc}
+         child { node (pbus) {pbus}
+             child { node (project3) {project3}
+                 child { node (conv_clk) {conv\\clk} }
+                 child { node (clearn) {clearn} }
+                 child { node (dsp) {dsp}
+                     child { node (fifo_source) {fifo\\source} }
+                     child { node (signal) {signal} }
+                     child { node (scope) {scope} }
+                 }
+                 child { node (dspen) {dspen} }
+                 child { node (fifo) {fifo}
+                     child { node (ram) {ram} }
+                 }
+                 child { node (slave) {slave} }
+             }
+         }
+         child { node (dmaready) {dmaready} }
+         child { node (mem) {mem} }
+         child { node (dma) {dma} }
+         child { node (cpu) {cpu}
+             child { node (daemon) {daemon}
+                 child { node (dsp) {dsp}
+                     child { node (signal) {signal} }
+                     child { node (signal_source) {signal\\source} }
+                     child { node (dma_sink) {dma\\sink} }
+                 }
+             }
+         }
+     }
+     child { node (audio_freq) {audio\\freq} }
+     child { node (audio_sample_rate) {audio\\sample\\rate} }
+     child { node (test_project3) {test\\project3} }
+;
+\end{tikzpicture}

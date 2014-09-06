@@ -1,0 +1,484 @@
+\section{System on a Chip}
+
+\subsection{The System Bus}
+
+\begin{frame}[fragile]
+    Goal of this section is to build project1 from the bottom up.
+    \begin{center}
+        \input{img/project1-resource-tree.latex}
+    \end{center}
+    \begin{example}
+        \begin{python}
+from system import System
+system = System('project1')
+        \end{python}
+    \end{example}
+\end{frame}
+
+\begin{frame}{Architeture of a System on a Chip}
+    \begin{center}
+        \begin{tikzpicture}
+            \tikzstyle{every node} = [draw,
+                on grid,
+                node distance=.2\textwidth,
+                minimum size =.1\textwidth];
+            \tikzstyle{Bus} = [fill=blue, text=white, minimum width=.7\textwidth];
+            \tikzstyle{Master} = [fill=green];
+            \tikzstyle{Slave} = [fill=red];
+            %\draw [step=1, help lines] (-6, -6) grid (6, 4);
+            \node [name=bus, Bus] at (0, 0) {Main System Bus};
+            \node [name=cpu, Master] at (-3, 2) {CPU};
+            \node [name=fabricm, Master] at (-1, 2) {Fabric};
+            \node [name=eth, Master] at (1, 2) {Ethernet};
+            \node [name=dma, Master] at (3, 2) {DMA};
+            \node [name=sram, Slave] at (-3, -2) {SRAM};
+            \node [name=emc, Slave] at (-1, -2) {EMC};
+            \node [name=fabrics, Slave] at (1, -2) {Fabric};
+            \node [name=periph, Slave] at (3, -2) {Peripherals};
+
+            \draw (cpu.south) -- ( cpu |- bus.north);
+            \draw (fabricm.south) -- ( fabricm |- bus.north);
+            \draw (eth.south) -- ( eth |- bus.north);
+            \draw (dma.south) -- ( dma |- bus.north);
+
+            \draw (sram.north) -- (sram |- bus.south);
+            \draw (emc.north) -- (emc |- bus.south);
+            \draw (fabrics.north) -- (fabrics |- bus.south);
+            \draw (periph.north) -- (periph |- bus.south);
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Memory Address Space}
+    \begin{center}
+        \begin {tabular}{| l | l || l |}
+            \hline
+            Start & End & Name \\
+            \hline
+            \hline
+            0xE0000000 & 0xFFFFFFFF & System Registers \\
+            0x74000000 & 0x77FFFFFF & External Memory 1 \\
+            0x70000000 & 0x73FFFFFF & External Memory 2 \\
+            0x40050000 & 0x400FFFFF & FPGA \\
+            \hline
+            0x40014000 & 0x40014FFF & RTC \\
+            0x40013000 & 0x40013FFF & GPIO \\
+            0x40012000 & 0x40012FFF & I2C \\
+            0x40011000 & 0x40011FFF & SPI \\
+            0x40010000 & 0x40010FFF & UART \\
+            \hline
+            0x40006000 & 0x40006FFF & Watchdog \\
+            0x40004000 & 0x40004FFF & DMA \\
+            0x40003000 & 0x40003FFF & Ethernet \\
+            0x20000000 & 0x2000FFFF & ESRAM \\
+            \hline
+        \end{tabular}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Bus Transactions}
+    \begin{itemize}
+        \item Let us move signals around the system.
+        \item Master / Slave.
+        \item Transmit / Receive.
+    \end{itemize}
+\end{frame}
+
+\subsection{The State Machine}
+
+\begin{frame}[fragile]
+    \frametitle{The Clock}
+    \begin{example}
+        \begin{python}
+clk = Clock.create_and_connect('/', 'clk', 10e6)
+        \end{python}
+    \end{example}
+    \begin{block}{Viewing a clock over time}
+        \begin{wave}{1}{9}
+        \end{wave}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{The Switch}
+    \begin{example}
+        \begin{python}
+resetn = Reset.create_and_connect('/', 'resetn', async=False)
+        \end{python}
+    \end{example}
+    The Reset Switch.
+\end{frame}
+
+
+\begin{frame}{An Analogy}
+    The door light in your car
+\end{frame}
+
+\begin{frame}{State Machine Diagrams}
+    \begin{center}
+      \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.8cm, semithick]
+        \tikzstyle{every state}=[draw=black]
+        \tikzstyle{on}=[fill=red,text=white];
+      
+        \node[state]         (d)              {D-OFF};
+        \node[on,state]      (D) [above of=d] {D-ON};
+        \node[state]         (f) [left of=d]  {OFF};
+        \node[on,state]      (N) [right of=d] {ON};
+      
+        \path (d) edge              node {switch} (f)
+              (d) edge              node {switch} (N)
+              (d) edge              node {door}   (D);
+      \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\subsection{Register Transfer Logic with MyHDL}
+
+\begin{frame}[fragile]
+    \frametitle{The Register}
+    \begin{center}
+    \begin{tikzpicture}
+        \node [shape=dff] (dff0) {};
+
+        \draw [<-] (dff0.D) -- +(-1, 0) node [anchor=east] {input};
+        \draw [->] (dff0.Q) -- +(1, 0) node [anchor=west] {output};
+        \draw [->] (dff0.Qn) -- +(1, 0) node [anchor=west] {$\overline{\mbox{output}}$};
+        \draw (dff0) +(-2cm, +2cm)
+                coordinate (tmp) node [anchor=east] {reset};
+        \draw [->] (tmp) -| (dff0.R);
+        \draw (dff0) +(-2cm, -2.5cm) coordinate (tmp)
+            node [anchor=east] {clock};
+        \draw [->] (tmp) -| ($ (dff0.CLK) + (-5mm, 0) $) -- (dff0.CLK);
+        
+        \draw (dff0) +(-2cm, -2cm) coordinate (tmp)
+            node [anchor=east] {enable};
+        \draw [->] (tmp) -| ($ (dff0.CE) + (-7.5mm, 0) $) -- (dff0.CE);
+    \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Register Transfer Logic}
+    \begin{tikzpicture}[circuit logic US]
+        \node [shape=dff] (dff0) {};
+
+        \draw [<-] (dff0.D) -- +(-1cm, 0) node [anchor=east] (input) {};
+        \draw (input) -- +(-2, 0) node [or gate, anchor=output] (or1) {};
+        \draw (or1.input 1) -| +(-3cm, 1cm) node [anchor=east] (on) {on};
+        \draw (or1.input 2) -| +(-3cm, -1cm) node [anchor=east] (door) {door};
+
+        \draw [->] (dff0.Q) -- +(1, 0) node [anchor=west] {light};
+        \draw (dff0) +(-2cm, +2cm)
+                coordinate (tmp) node [anchor=east] {reset};
+        \draw [->] (tmp) -| (dff0.R);
+        \draw (dff0) +(-2cm, -2.5cm) coordinate (tmp)
+            node [anchor=east] {clock};
+        \draw [->] (tmp) -| ($ (dff0.CLK) + (-5mm, 0) $) -- (dff0.CLK);
+        
+        \draw (dff0) +(-2cm, -2cm) coordinate (tmp)
+            node [not gate, anchor=output] (offn) {};
+        \draw [->] (offn) -| ($ (dff0.CE) + (-7.5mm, 0) $) -- (dff0.CE);
+
+        \draw (offn) +(-2cm, 0cm) coordinate (tmp)
+            node [anchor=east] (off) {off};
+        %\draw [->] (off) -| ($ (offn.input 1) + (-7.5mm, 0) $) -- (offn.input 1);
+
+    \end{tikzpicture}
+\end{frame}
+
+\begin{frame}{Field Programmable Gate Arrays}
+    \begin{center}
+    \begin{tikzpicture}[circuit logic US]
+        \def\N{3}
+        \def\M{3}
+
+        \foreach \m in {0,...,\M} {
+            \foreach \n in {0,...,\N}
+                \node [buffer gate] (buf\m\n) at ($ 2 *(\n,\m) $) {};
+        }
+
+        \foreach \m in {0,...,\M} {
+            \foreach \n in {0,...,\N}
+                \node [cloud, draw, minimum width=1cm, minimum height=.66cm] (log\m\n) at ($ 2 *(\n,\m) +(1,0) $) {};
+        }
+        
+        \foreach \m in {0,...,\M} {
+            \def\p{0}
+            \foreach \n in {1,...,\N} {
+                \draw [->] (buf\m\p.output) -- (log\m\p.west);
+                \draw [->] (log\m\p.east) -- (buf\m\n.input);
+                \global\let\p\n
+            }
+        }
+
+        \def\p{0}
+        \foreach \m in {1,...,\M} {
+            \foreach \n in {0,...,\N} {
+                \draw [->] (log\p\n.north) -- (log\m\n.south);
+            }
+            \global\let\p\m
+        }
+
+    \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{MyHDL Example I}
+    \begin{block}{Flip Flop}
+        \pythonexternal[firstline=1, lastline=8]{code/dff.py}
+    \end{block}
+\end{frame}
+
+
+\begin{frame}[fragile]
+    \frametitle{MyHDL Example II}
+    \begin{block}{Converting to Verilog}
+        \pythonexternal[firstline=10, lastline=15]{code/dff.py}
+    \end{block}
+\end{frame}
+
+\begin{frame}[shrink=20, fragile]
+    \frametitle{MyHDL Example III}
+    \begin{block}{Verilog Output}
+        \verilogexternal{code/dff.v}
+    \end{block}
+\end{frame}
+
+\begin{frame}[shrink=30, fragile]
+    \frametitle{MyHDL Example IV}
+    \begin{block}{Simulating}
+        \pythonexternal[firstline=17, lastline=32]{code/dff.py}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{MyHDL Example V}
+    \begin{block}{Running the Simulation}
+        \pythonexternal[firstline=34, lastline=39]{code/dff.py}
+    \end{block}
+\end{frame}
+
+
+\section{Simulating the System}
+
+\subsection{project 1}
+
+\begin{frame}[fragile]
+    Goal of project 1 is to blink an LED; a good first project.
+
+    \begin{example}
+        \begin{python}
+from misc import Led
+status_led = Led.create_and_connect('/', 'status_led')
+        \end{python}
+    \end{example}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{The Main Bus Matrix}
+    \begin{example}
+        \begin{python}
+soc = BusMatrix.create('/', 'soc', resetn, clk)
+
+soc.simulate('project1', '/soc/test_project1')
+
+def test_project1(soc):
+    soc.reset()
+    soc.delay(1)
+    soc.transmit(0x4000000, 0)
+    soc.receive(0x4000000)
+    soc.rdata
+        \end{python}
+    \end{example}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{The APB3 Bus Functional Model}
+    \begin{example}
+        \begin{python}
+pbus = Apb3Bus.create('/soc', 'pbus', soc)
+pbus.transmit(0x50, 0xDEADBEEF)
+pbus.receive(0x50)
+assert pbus.rdata == 0xDEADBEEF
+        \end{python}
+    \end{example}
+    \begin{itemize}
+        \item Implements the bus transaction interface.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[shrink=20, fragile]
+    \frametitle{The APB3 Bus Slave}
+    \begin{example}
+        \begin{python}
+def project1(bus_presetn, bus_pclk, bus_paddr, bus_psel,
+        bus_penable, bus_pwrite, bus_pwdata, bus_pready,
+        bus_prdata, bus_pslverr): 
+    <the bus slave state machine>
+Apb3Bus.connect_slave(pbus, project1, prefix='bus_')
+        \end{python}
+    \end{example}
+    \begin{itemize}
+        \item The prefix lets you setup the namespace
+        \item Notice we're connecting up the project to this slave interface.
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}[shrink=20, fragile]
+    \frametitle{The Project1 Bus Slave}
+    \begin{example}
+        \begin{python}
+def project1(...):
+    state_t = enum('IDLE', 'DONE',)
+    state = Signal(state_t.IDLE)
+
+    @always_seq(bus_pclk.posedge, reset=bus_presetn)
+    def state_machine():
+        bus_pslverr.next = 0
+        if state == state_t.IDLE:
+            bus_pready.next = True
+            if bus_penable and bus_psel:
+                if bus_paddr[8:] == 0x40:
+                    if bus_pwrite:
+                        status_led.next = bus_pwdata[0]
+                        state.next = state_t.DONE
+                    else:
+                        bus_prdata.next = 0
+                        state.next = state_t.DONE
+                else:
+                    state.next = state_t.DONE
+            else:
+                state.next = state_t.IDLE
+        elif state == state_t.DONE:
+            bus_pready.next = True
+            state.next = state_t.IDLE
+
+    return state_machine
+        \end{python}
+    \end{example}
+    Implements the bus transaction interface.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{The CPU \& What's a Pointer For}
+    \begin{example}
+        \begin{python}
+cpu = Cpu.create_and_connect('/soc', 'cpu', soc)
+        \end{python}
+    \end{example}
+    \begin{example}
+        \begin{python}
+reg = 0x40000000
+yield cpu.load(reg, 4)
+yield cpu.store(reg)
+val = cpu.rdata
+        \end{python}
+    \end{example}
+    \begin{example}
+        \begin{ccode}
+volatile uint32_t *reg = 0x40000000;
+*reg = 4; // Load
+uint32_t val = *reg; // Store
+        \end{ccode}
+    \end{example}
+\end{frame}
+
+\subsection{Unit Testing}
+
+\begin{frame}{Why Test}
+    \begin{block}{}
+        Testing lets you make sure that future changes don't break exisitng code.
+        In other words, it's the \em{foundation} on which to architect your project.
+        This is called Test Driven Development.
+    \end{block}
+\end{frame}
+
+%\begin{frame}[fragile]
+%    \frametitle{Python Unit Test Framework}
+%    \begin{example}
+%        \begin{python}
+%import unittest
+%
+%class TestMagigger(unittest.TestCase):
+%    def setUp(self):
+%        self.var = 4
+%
+%    def test_set_up_works(self):
+%        assert self.var == 4
+%
+%if __name__ == '__main__':
+%    unittest.main()
+%        \end{python}
+%    \end{example}
+%    TODO: add in output.
+%\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Simulation}
+    \begin{example}
+        \begin{python}
+@system.model
+def test_project1():
+    bus = system.node_at_path('/soc').container
+    status_led = system.node_at_path('/soc/status_led').container
+    yield bus.reset()
+    assert not status_led.signal
+    yield bus.transmit(0x40, 0x0001)
+    assert status_led.signal
+    yield bus.receive(0x40)
+    assert bus.rdata == 0x0000
+    yield bus.transmit(0x40, 0x0000)
+    assert not status_led.signal
+    yield bus.receive(0x40)
+    assert bus.rdata == 0x0000
+    raise StopSimulation
+
+sim = Sim.create_and_connect('/soc', 'test_project1',
+        '/soc/project1')
+        \end{python}
+    \end{example}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Running the System}
+    \begin{example}
+        \begin{python}
+system.dispatch('/soc/project1.v')   # Generate the Verilog
+system.dispatch('/soc/test_project1.vcd')   # Run the simulation
+        \end{python}
+    \end{example}
+\end{frame}
+
+\subsection{gtkwave}
+
+\begin{frame}{Installing}
+    \begin{block}{Requirements}
+        \begin{itemize}
+            \item python
+            \item git
+            \item python-virtualenv, python-pip
+        \end{itemize}
+    \end{block}
+    \begin{example}
+\$ apt-get install python git-core python-virtual-env python-pip \\
+\$ git clone https://github.com/testaco/dcc2014.git \\
+\$ cd dcc2014 \\
+\$ virtualenv env \\
+\$ source env/bin/activate \\
+\$ pip install numpy matplotlib scipy myhdl \\
+\$ cd projects \\
+\$ make project1
+    \end{example}
+\end{frame}
+
+\begin{frame}{The Timing Diagram}
+    \includegraphics[width=\textwidth]{img/test_project1.png}
+\end{frame}
+
+\begin{frame}{Homework \#1}
+    \begin{block}{Goal}
+        The goal of project 1 homework is to modify the \pythoninline{project1} state machine to return the value of the status led when read.  Confirm your results by adding a new simulation \pythoninline{test_project1_read}.
+    \end{block}
+\end{frame}

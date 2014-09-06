@@ -1,0 +1,37 @@
+%\newcommand{\soc}{
+%    \begin{tikzpicture}
+%        \tikzstyle{every node} = [node distance = 4cm];
+%        \tikzstyle{Bus} = [draw=black];
+%        \tikzstyle{Cpu} = [draw=black];
+%        \node [name=bus, Bus] {System Bus};
+%        \node [name=cpu, Cpu, above of=bus] {CPU};
+%        \node [name=sysreg, right of=cpu] {SysReg};
+%        \node [name=esram, below of=sysreg] {ESRAM};
+%        \node [name=envm, below of=esram] {ENVM};
+%        \node [name=supervisor, left of=cpu] {Supervisor}
+%            child {node [name=pll] {PLL}}
+%            child {node [name=osc] {OSC}}
+%            child {node [name=rc] {RC}}
+%            child {node [name=wdt] {WDT}}
+%            child {node [name=rtc] {RTC}};
+%        \node [name=pbus1, left of=bus] {Peripheral Bus 1}
+%            child {node [name=spi1] {SPI 1}}
+%            child {node [name=uart1] {UART 1}}
+%            child {node [name=i2c1] {I2C 1}}
+%            child {node [name=gpio] {GPIO}};
+%        \node [name=dma, below of=bus] {DMA};
+%        \node [name=emc, below of=bus] {EMC}
+%            child {node [name=ram] {RAM}}
+%            child {node [name=flash] {Flash}};
+%        \node [name=eth, below of=bus] {Ethernet};
+%        \node [name=fpga, below of=bus] {FPGA}
+%            child {node [name=fabric] {Logic Cells}}
+%            child {node [name=sram] {RAM}}
+%            child {node [name=macc] {MACC}};
+%        \node [name=pbus2, right of=bus] {Peripheral Bus 2}
+%            child {node [name=spi2] {SPI 2}}
+%            child {node [name=uart2] {UART 2}}
+%            child {node [name=i2c2] {I2C 2}}
+%            child {node [name=timer] {Timer}};
+%    \end{tikzpicture}
+%}

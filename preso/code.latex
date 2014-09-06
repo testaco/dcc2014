@@ -1,0 +1,97 @@
+% Default fixed font does not support bold face
+\DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{9} % for bold
+\DeclareFixedFont{\ttm}{T1}{txtt}{m}{n}{9}  % for normal
+
+% Custom colors
+\usepackage{color}
+\definecolor{deepblue}{rgb}{0,0,0.5}
+\definecolor{deepred}{rgb}{0.6,0,0}
+\definecolor{deepgreen}{rgb}{0,0.5,0}
+
+\usepackage{listings}
+
+% Python style for highlighting
+\newcommand\pythonstyle{\lstset{
+language=Python,
+basicstyle=\ttm,
+otherkeywords={self,yield,assert}, % Add keywords here
+keywordstyle=\ttb\color{deepblue},
+emph={>>>},          % Custom highlighting
+emphstyle=\ttb,    % Custom highlighting style
+stringstyle=\color{deepgreen},
+showstringspaces=false            % 
+}}
+
+
+% Python environment
+\lstnewenvironment{python}[1][]
+{
+\pythonstyle
+\lstset{#1}
+}
+{}
+
+% Python for external files
+\newcommand\pythonexternal[2][]{{
+\pythonstyle
+\lstinputlisting[#1]{#2}}}
+
+% Python for inline
+\newcommand\pythoninline[1]{{\pythonstyle\lstinline!#1!}}
+
+% Verilog style for highlighting
+\newcommand\verilogstyle{\lstset{
+language=Verilog,
+basicstyle=\ttm,
+otherkeywords={self},             % Add keywords here
+keywordstyle=\ttb\color{deepblue},
+emph={},          % Custom highlighting
+emphstyle=\ttb,    % Custom highlighting style
+stringstyle=\color{deepgreen},
+showstringspaces=false            % 
+}}
+
+% Verilog environment
+\lstnewenvironment{verilog}[1][]
+{
+\verilogstyle
+\lstset{#1}
+}
+{}
+
+% Verilog for external files
+\newcommand\verilogexternal[2][]{{
+\verilogstyle
+\lstinputlisting[#1]{#2}}}
+
+% Verilog for inline
+\newcommand\veriloginline[1]{{\verilogstyle\lstinline!#1!}}
+
+% C style for highlighting
+\newcommand\ccodestyle{\lstset{
+language=C,
+basicstyle=\ttm,
+otherkeywords={self},             % Add keywords here
+keywordstyle=\ttb\color{deepblue},
+emph={},          % Custom highlighting
+emphstyle=\ttb,    % Custom highlighting style
+stringstyle=\color{deepgreen},
+showstringspaces=false            % 
+}}
+
+% C environment
+\lstnewenvironment{ccode}[1][]
+{
+\ccodestyle
+\lstset{#1}
+}
+{}
+
+% C for external files
+\newcommand\ccodeexternal[2][]{{
+\ccodestyle
+\lstinputlisting[#1]{#2}}}
+
+% C for inline
+\newcommand\ccodeinline[1]{{\ccodestyle\lstinline!#1!}}
+

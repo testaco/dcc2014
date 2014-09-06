@@ -1,0 +1,49 @@
+%\AtBeginSection[]
+%{
+%\begin{frame}{Table of Contents}
+%\tableofcontents[currentsection]
+%\end{frame}
+%}
+
+\AtBeginSubsection[]
+{
+    \begin{frame}{Outline}
+        \tableofcontents[currentsection,currentsubsection]
+    \end{frame}
+}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+%\begin{frame}[fragile]
+%    \frametitle{Checking The Theme Out}
+%   \begin{block}{This is a Block}
+%      This is important information
+%   \end{block}
+% 
+%   \begin{alertblock}{This is an Alert block}
+%   This is an important alert
+%   \end{alertblock}
+% 
+%   \begin{exampleblock}{This is an Example block}
+%        \begin{python}
+%class Myclass(object):
+%    def __init__(self, x):
+%        self.x = x
+%        \end{python}
+%   \end{exampleblock}
+%\end{frame}
+
+\begin{frame}{Seminar Schedule}
+    \begin{itemize}
+        \item 8:00AM - 8:40AM    \emph{Lecture 1 - Overview}
+        \item 8:40AM - 8:50AM    \emph{Break / HW 1}
+        \item 8:50AM - 9:30AM    \emph{Lecture 2 - Signals \& Systems}
+        \item 9:30AM - 10:00AM   \emph{Break / Project 1}
+        \item 10:00AM - 10:40AM  \emph{Lecture 3 - Mixed Signal Systems}
+        \item 10:40AM - 10:50AM  \emph{Break / HW 2}
+        \item 10:50AM - 11:30AM  \emph{Lecture 4 - Real Time Systems}
+        \item 11:30AM - 12:00PM  \emph{Done! / Project 3}
+    \end{itemize}
+\end{frame}

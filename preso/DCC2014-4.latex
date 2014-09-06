@@ -1,0 +1,7 @@
+\input{header.latex}
+\subtitle{Part IV: Processing the Real World}
+\begin{document}
+\input{preso.latex}
+\input{part4.latex}
+\input{references.latex}
+\end{document}

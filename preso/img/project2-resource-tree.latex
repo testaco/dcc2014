@@ -1,0 +1,28 @@
+\begin{tikzpicture}[align=center]
+\tikzstyle{every node} = [draw];
+\node (root) {root} [edge from parent fork down]
+     child { node (resetn) {resetn} }
+     child { node (clk) {clk} }
+     child { node (status_led) {status\\led} }
+     child { node (soc) {soc}
+         child { node (cpu) {cpu} }
+         child { node (pbus) {pbus}
+             child { node (project2) {project2}
+                 child { node (conv_clk) {conv\\clk} }
+                 child { node (fifo) {fifo}
+                     child { node (ram) {ram} }
+                 }
+                 child { node (slave) {slave} }
+                 child { node (clearn) {clearn} }
+                 child { node (dspen) {dspen} }
+                 child { node (dsp) {dsp}
+                     child { node (signal) {signal} }
+                     child { node (fifo_source) {fifo\\source} }
+                     child { node (scope) {scope} }
+                 }
+             }
+         }
+     }
+     child { node (test_project2) {test\\project2} }
+;
+\end{tikzpicture}

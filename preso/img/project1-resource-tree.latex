@@ -1,0 +1,14 @@
+\begin{tikzpicture}[align=center]
+\tikzstyle{every node} = [draw];
+\node (root) {root} [edge from parent fork down]
+     child { node (resetn) {resetn} }
+     child { node (clk) {clk} }
+     child { node (soc) {soc}
+         child { node (pbus) {pbus} }
+         child { node (status_led) {status\\led} }
+         child { node (project1) {project1} }
+         child { node (cpu) {cpu} }
+         child { node (test_project1) {test\\project1} }
+     }
+;
+\end{tikzpicture}

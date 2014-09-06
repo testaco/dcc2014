@@ -1,0 +1,36 @@
+\useoutertheme{infolines}
+\useinnertheme{rounded}
+
+\definecolor{chocolate}{RGB}{33,33,33}
+
+\setbeamercolor{alerted text}{fg=black}
+\setbeamercolor{background canvas}{bg=white}
+\setbeamercolor{block body alerted}{bg=normal text.bg!90!black}
+\setbeamercolor{block body}{bg=normal text.bg!90!black}
+\setbeamercolor{block body example}{bg=normal text.bg!90!black}
+\setbeamercolor{block title alerted}{use={normal text,alerted text},fg=alerted text.fg!75!normal text.fg,bg=normal text.bg!75!black}
+\setbeamercolor{block title}{bg=blue}
+\setbeamercolor{block title example}{use={normal text,example text},fg=example text.fg!75!normal text.fg,bg=normal text.bg!75!black}
+\setbeamercolor{fine separation line}{}
+\setbeamercolor{frametitle}{fg=white}
+\setbeamercolor{item projected}{fg=black}
+\setbeamercolor{normal text}{bg=white,fg=black}
+\setbeamercolor{palette sidebar primary}{use=normal text,fg=normal text.fg}
+\setbeamercolor{palette sidebar quaternary}{use=structure,fg=structure.fg}
+\setbeamercolor{palette sidebar secondary}{use=structure,fg=structure.fg}
+\setbeamercolor{palette sidebar tertiary}{use=normal text,fg=normal text.fg}
+\setbeamercolor{section in sidebar}{fg=black}
+\setbeamercolor{section in sidebar shaded}{fg=grey}
+\setbeamercolor{section in toc}{fg=black}
+\setbeamercolor{separation line}{}
+\setbeamercolor{sidebar}{bg=red}
+\setbeamercolor{sidebar}{parent=palette primary}
+\setbeamercolor{structure}{bg=black, fg=white}
+\setbeamercolor{subsection in sidebar}{fg=white}
+\setbeamercolor{subsection in sidebar shaded}{fg=white}
+\setbeamercolor{title}{fg=white}
+\setbeamercolor{titlelike}{fg=white}
+
+\setbeamertemplate{blocks}[rounded][shadow=false]
+%%\setbeamertemplate{background canvas}[vertical shading][bottom=white,top=structure.fg!25]
+\setbeamertemplate{sidebar canvas left}[horizontal shading][left=white!40!black,right=black]

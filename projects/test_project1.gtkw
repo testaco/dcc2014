@@ -1,0 +1,41 @@
+[*]
+[*] GTKWave Analyzer v3.3.34 (w)1999-2012 BSI
+[*] Tue Sep  2 22:01:10 2014
+[*]
+[dumpfile] "/home/testa/dcc/projects/test_project1.vcd"
+[dumpfile_mtime] "Tue Sep  2 21:45:07 2014"
+[dumpfile_size] 1168
+[savefile] "/home/testa/dcc/projects/test_project1.gtkw"
+[timestart] 0
+[size] 1440 824
+[pos] -1 -1
+*-8.199798 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] test_project1.
+[sst_width] 223
+[signals_width] 158
+[sst_expanded] 1
+[sst_vpaned_height] 231
+@28
+test_project1.dut_0.bus_pclk
+test_project1.dut_0.bus_presetn
+@22
+test_project1.dut_0.bus_paddr[31:0]
+@28
+test_project1.dut_0.bus_psel
+test_project1.dut_0.bus_penable
+test_project1.dut_0.bus_pwrite
+@22
+test_project1.dut_0.bus_pwdata[31:0]
+@200
+-
+@28
+test_project1.dut_0.state
+[color] 1
+test_project1.dut_0.status_led
+@22
+test_project1.dut_0.bus_prdata[31:0]
+@28
+test_project1.dut_0.bus_pready
+test_project1.dut_0.bus_pslverr
+[pattern_trace] 1
+[pattern_trace] 0

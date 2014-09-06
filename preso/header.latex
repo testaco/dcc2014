@@ -1,0 +1,29 @@
+\documentclass[pdf,mathserif]{beamer}
+\hypersetup{pdfstartview={Fit}} % fits the presentation to the window when first displayed
+
+\title{Intro to SoC FGPAs for Mixed Signal Systems}
+\author[Testa, KD2BMH]{Chris Testa, KD2BMH \\ \texttt{testac@gmail.com}}
+\date[DCC '14]{33rd ARRL and TAPR Digital Communications Conference}
+
+\usepackage{amsmath}
+\usepackage{pgf,tikz}
+\usepackage{tikz-qtree}
+\usetikzlibrary{calc}
+\usetikzlibrary{graphs}
+\usetikzlibrary{trees}
+\usetikzlibrary{arrows,automata,positioning}
+\usetikzlibrary{circuits.logic.US,circuits.ee,circuits.ee.IEC}
+\usetikzlibrary{shapes.symbols}
+\usetikzlibrary{chains,matrix}
+
+% My theme
+\input{theme.latex}
+% Syntax highlighting macros
+\input{code.latex}
+% Draw the System on a Chip
+\input{soc.latex}
+% Draw timing diagrams
+\input{timing.sty}
+% Flip Flops
+\input {flipflop.latex}
+

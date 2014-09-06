@@ -1,0 +1,433 @@
+\section{About}
+
+\begin{frame}{System on a Chip}
+    \begin{center}
+        \includegraphics[width=.7\textwidth]{img/stm32f.jpg}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Signals Overview}
+    \begin{itemize}
+    \item Signals convey information
+    \item In the real world, there are both Analog and Digital signals
+    \item Mixed Signals is the interface and cooporation of the two
+    \item Computers leaving the Virtual World and joining us in the Real World
+    \end{itemize}
+    \begin{columns}
+        \begin{column}{.5\textwidth}
+            \begin{center}
+                \begin{tikzpicture}[domain=0:4]
+                    \draw[very thin,color=gray,->] (-0.2,0) -- (4.2,0) node[right, color=black] {$t$};
+                    \draw[very thin,color=gray,->] (0,-1.2) -- (0,1.2) node[above, color=black] {$f(t)$};
+                    \draw plot[smooth] (\x, {sin(4*\x r)});
+                \end{tikzpicture}
+            \end{center}
+        \end{column}
+        \begin{column}{.5\textwidth}
+            \begin{center}
+                \begin{tikzpicture}[domain=0:4]
+                    \draw[very thin,color=gray,->] (-0.2,0) -- (4.2,0) node[color=black, right] {$n$};
+                    \draw[very thin,color=gray,->] (0,-1.2) -- (0,1.2) node[color=black, above] {$f[n]$};
+                    \draw plot[ycomb,thin,mark=*] (\x, {sin(4*\x r)});
+                \end{tikzpicture}
+            \end{center}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Systems Overview}
+    \begin{itemize}
+    \item Input signals enter the system
+    \item A process or algorithm is carried out on the signals
+    \item Output signals are controlled in response
+    \end{itemize}
+    \begin{block}{Mixed Signal System}
+        \begin{center}
+            \begin{tikzpicture}[start chain, align=center]
+                \tikzstyle{every on chain} = [join];
+                \tikzstyle{every join} = [->];
+                \node [on chain] {analog\\input};
+                \node [on chain, draw, shape=signal, signal to=west] (adc) {ADC};
+                \node [on chain, draw] (sys) {System};
+                \node [on chain, draw, shape=signal, signal to=east] (dac) {DAC};
+                \node [on chain] {analog\\output};
+
+                \node [below of=adc] (adcclk) {conv\\clk};
+                \draw [->] (adcclk.north) -- (adc.south);
+
+                \node [below of=sys] (sysclk) {system\\clk};
+                \draw [->] (sysclk.north) -- (sys.south);
+
+                \node [below of=dac] (dacclk) {conv\\clk};
+                \draw [->] (dacclk.north) -- (dac.south);
+            \end{tikzpicture}
+        \end{center}
+    \end{block}
+\end{frame}
+
+\subsection{Who Am I}
+
+\begin{frame}{My Story}
+    \begin{columns}
+        \begin{column}{.3\textwidth}
+            \includegraphics[height=.7\textheight]{img/me.jpg}
+        \end{column}
+        \begin{column}{.7\textwidth}
+            \begin{itemize}
+                \item Ripping apart computers at 9
+                \item Coding C at 11
+                \item Backpacking in Lassen Volcanic at 26 (2011)
+                \item I just wanted to make a call on top of the mountain
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{CV}
+    \includegraphics[width=.3\textwidth]{img/EagleScout.png}
+    \includegraphics[width=.3\textwidth]{img/umd.jpg}
+    \includegraphics[width=.3\textwidth]{img/google.png}
+\end{frame}
+
+\begin{frame}{The Maker Movement}
+    \begin{columns}
+        \begin{column}{.5\textwidth}
+            \includegraphics[width=\textwidth]{img/make-cover.jpg}
+        \end{column}
+        \begin{column}{.5\textwidth}
+            \emph{Whether in radio, auto, aircraft, electronics, or personal computers and the internet, communities of kit-building talented amateurs --- not credentialed elites --- have disproportionately influenced early innovation.}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Motivation to make a Radio}
+    \begin{columns}
+        \begin{column}{.5\textwidth}
+            \begin{center}
+                \includegraphics[width=.9\textwidth]{img/nopa.jpg}
+            \end{center}
+        \end{column}
+        \begin{column}{.5\textwidth}
+            \begin{center}
+                \includegraphics[width=.9\textwidth]{img/tesla.jpg}
+            \end{center}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Exploring GNU Radio}
+    \emph{We could take some lessons from the Internet and push the smarts out to the edges. Instead of cell phones being second-class citizens, usable only if infrastructure is in place and limited to the capabilities determined worthwhile by the operator, we could build smarter devices. These user-owned devices would generate the network. They'd create a mesh among themselves, negotiate for backhaul and be free to evolve new solutions, features and applications.}
+    -- Eric Blossom
+\end{frame}
+
+\begin{frame}{Finding TAPR}
+    \begin{center}
+        \includegraphics[width=.5\textwidth]{img/packet-station.png}
+        \cite{Rogers86}
+    \end{center}
+\end{frame}
+
+\begin{frame}{The Smartphone}
+    \begin{center}
+        \includegraphics[width=.6\textwidth]{img/iphone4s.png}
+    \end{center}
+\end{frame}
+
+\subsection{What do I do}
+
+\begin{frame}{Utah Prototype}
+    \begin{center}
+        \includegraphics[width=.8\textwidth]{img/utah.jpg}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Alpha}
+    \begin{center}
+        \includegraphics[width=.8\textwidth]{img/alpha.jpg}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Bravo}
+    \begin{center}
+        \includegraphics[width=.9\textwidth]{img/bravo.jpg}
+    \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Project Status}
+    \begin{itemize}
+        \item Both Transmitter and Receiver work on 2nd board (Bravo)
+        \item Not fully integrated with the app processor.
+        \item Thanks to Bruce Perens K6BP I now have access to the right equpiment to see what the device is doing.
+        \item Extremely difficult/expensive to make it legal on all bands / all modes.
+        \item Come tomorrow to see how we're going to get from Whitebox Bravo to the Algoram HT of the Future.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[shrink=50]
+    \frametitle{System Overview}
+    \begin{center}
+        \begin{tikzpicture}
+            \tikzset{edge from parent/.style={draw,edge from parent path={(\tikzparentnode.south) -- +(0,-8pt) -| (\tikzchildnode)}}}
+            \Tree [.root [.baseband [.processor kernel driver daemon ] [.fpga slave dsp ] ]
+                         [.transceiver [.codec conv-clock ] [.xcvr synth rx-fil ] [.frontend pwr-amp rx-lna final ] ]
+                         [.app
+                            [.lcd digitizer ]
+                            [.conn sd-card usb eth ]
+                            [.processor kernel driver daemon ]
+                            [.wifi bt ] ] ] 
+        \end{tikzpicture}
+    \end{center}
+
+    \begin{center}
+        \begin{tikzpicture}
+            \tikzset{edge from parent/.style={draw,edge from parent path={(\tikzparentnode.south) -- +(0,-8pt) -| (\tikzchildnode)}}}
+            \Tree [.root 
+                [.power switch analog digital ]
+                [.case body front back ]
+                [.manufacture bom supply-chain assembly ]
+                [.qa-tests 6m 2m 1.25m 70cm 33cm ]
+                [.fcc-tests cw ssb am fm fsk ] ]
+        \end{tikzpicture}
+    \end{center}
+
+    \begin{itemize}
+        \item The project is massive.  Probably 10k nodes, 100k edges.
+        \item The clear separation of the design allows for a real plan to form.
+    \end{itemize}
+
+\end{frame}
+
+\begin{frame}{Resources}
+    \begin{itemize}
+        \item http://radio.testa.co/
+        \item http://github.com/testaco/whitebox
+        \item http://facebook.com/whiteboxradio
+    \end{itemize}
+
+    The code/slides for this presentation is available at http://github.com/testaco/dcc2014
+\end{frame}
+
+\subsection{Why are we here}
+
+\begin{frame}{Why Program?}
+    \begin{itemize}
+        \item To boss computers around
+        \item Write programs that write programs
+        \item Write programs that write programs that make real systems
+    \end{itemize}
+\end{frame}
+
+\section{Python}
+
+\subsection{The Thing}
+
+\begin{frame}[fragile]
+    \frametitle{The REPL}
+    \begin{definition}
+        The \emph{Read-Eval-Print-Loop} or \emph{REPL} is an easy way to get started in programming any interpreted language.
+    \end{definition}
+    \begin{definition}
+        An \emph{expression} is a collection of Things that can be evaluated by a machine to get a result.
+    \end{definition}
+    \begin{example}
+        \begin{python}
+>>> import sys
+>>> help(sys)
+        \end{python}
+    \end{example}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{The Thing}
+    Python has many built-in types of things like numbers and strings.
+    \begin{example}
+        \begin{python}
+>>> 42
+42
+
+>>> 'Hello world!'
+'Hello world!'
+        \end{python}
+    \end{example}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{The Variable}
+    \begin{example}
+        \begin{python}
+>>> x = 42
+>>> y = 1
+>>> x + y
+43
+        \end{python}
+    \end{example}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{The Function}
+    \begin{example}
+        \begin{python}
+>>> def myfunc(a, b):
+...     return a + b
+...
+>>> myfunc(42, 1)
+43
+        \end{python}
+    \end{example}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{The Class}
+    \begin{example}
+        \begin{python}
+>>> class MyClass(object):
+...     def __init__(self, x):
+...         print 'In __init__'
+...         self.x = x
+...     def mymethod(self, y):
+...         return self.x + y
+...
+>>> m = MyClass(42)
+In __init__
+>>> m.mymethod(1)
+43
+        \end{python}
+    \end{example}
+\end{frame}
+
+
+\subsection{The Bag}
+
+\begin{frame}[fragile]
+    \frametitle{The List}
+    \begin{example}
+        \begin{python}
+>>> a = [0, 1, 2]
+>>> a[0]
+0
+>>> len(a)
+3
+        \end{python}
+    \end{example}
+    \begin{example}
+        \begin{python}
+>>> range(3)
+[1, 2, 3]
+        \end{python}
+    \end{example}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{The Dictionary}
+    \begin{example}
+        \begin{python}
+>>> b = { 'foo': 0, 'bar': 1, 'baz': 2 }
+>>> b.keys()
+['foo', 'bar', 'baz']
+>>> b.values()
+[0, 1, 2]
+>>> 'foo' in b
+True
+        \end{python}
+    \end{example}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Iterating or Looping}
+    \begin{example}
+        \begin{python}
+>>> range(3)
+[0, 1, 2]
+>>> for i in range(3):
+...     print i+i
+0
+2
+4
+        \end{python}
+    \end{example}
+    \begin{example}
+        A common nemonic is given special syntax (list comprehension):
+        \begin{python}
+>>> [i+i for i in range(3)]
+[0, 2, 4]
+        \end{python}
+    \end{example}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Generators}
+    \begin{example}
+        \begin{python}
+>>> def myrange(final):
+...     i = 0
+...     while i < final:
+...         yield i
+...         i += 1
+...
+>>> myrange(3)
+<generator object myrange at 0xb720ed24>
+>>> [i for i in myrange(3)]
+[0, 1, 2]
+        \end{python}
+    \end{example}
+\end{frame}
+
+%\begin{frame}{Model View Controller}
+%\end{frame}
+%
+%\begin{frame}{You can't have your cake and eat it, too}
+%    Tradeoffs of different costs
+%    memory -- time -- price -- power
+%    Measured in big-Oh notation:
+%        constant -- linear -- logarithmic -- polynomial -- exponential
+%\end{frame}
+
+\subsection{The Do of Programming}
+
+%\begin{frame}{Stages of a Programmer}
+%    From Code on the Cob, by Chris Kiwidog Hargrove\cite{Hargrove99}
+%
+%    Stage 1 - Fundamental.
+%
+%    Stage 2 - Exploratory.
+%
+%    Stage 3 - Concrete.
+%
+%    Stage 4 - Analytical.
+%
+%    Stage 5 - Holistic.
+%
+%    Stage 6 - Dynamic.
+%
+%    Stage 7 - ?
+%\end{frame}
+
+\begin{frame}{Learn by Example}
+    \begin{itemize}
+        \item Open Source for the win.
+        \item Pattern matching is everything.
+        \item Find stuff by searching.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{The Artist's and Athlete's Way}
+    Just Do It!
+    Divide and Conquer.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Work}
+    Go to http://shell.appspot.com/ or open up python on your terminal.
+
+    Write a \textbf{generator} \pythoninline{fibonacci} that yields the first \pythoninline{N}
+
+    \begin{example}
+        \begin{python}
+assert list(fibonacci(0)) == []
+assert list(fibonacci(10)) == [1, 1, 2, 3, 5, 8, 13, 21, 34, 55]
+        \end{python}
+    \end{example}
+
+    Solution is in code/fibonacci.py
+\end{frame}

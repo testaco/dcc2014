@@ -1,0 +1,19 @@
+\begin{frame}[allowframebreaks]{References}
+  \begin{thebibliography}{10}    
+  \beamertemplatebookbibitems
+  \beamertemplatearticlebibitems
+  \bibitem{Hargrove99}
+    Chris Hargrove
+    \newblock The Next Stage
+    \newblock {\em Code on the Cob}, GameDev.net
+  \bibitem{Rogers86}
+    Buck Rogers K4ABT
+    \newblock PACKET RADIO; The Easy Way !
+    \newblock a computer or terminal, and a terminal node controller (TNC)
+  \bibitem{ZeptoBars}
+    "MT4C1024-HD" ZeptoBars
+    \newblock http://zeptobars.ru/en/read/how-to-open-microchip-asic-what-inside
+    \newblock Licensed under Creative Commons Attribution 3.0 via Wikimedia Commons
+  \end{thebibliography}
+\end{frame}
+
