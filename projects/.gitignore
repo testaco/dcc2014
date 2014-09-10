@@ -1,0 +1,5 @@
+*.vcd
+*.v
+*.pyc
+*.png
+*.latex
