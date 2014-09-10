@@ -2,7 +2,7 @@
 
 \begin{frame}[shrink,fragile]
     \frametitle{Project 3}
-    Goal: Free up the CPU to do things besides wait to add samples to the FIFO.
+    Goal: Simulate streaming data from the CPU to the FPGA and out.
     \input{img/project3-resource-tree.latex}
 \end{frame}
 
@@ -13,6 +13,7 @@
         \item In project 2, we only sent 64 samples out; it's time to make this thing stream.
         \item We can add another master to the system bus called the Direct Memory Access Controller, or DMA.
         \item the CPU quickly writes samples to system memory, and delegates writing samples into the FIFO to the DMA.
+        \item The CPU advances data through the flowgraph when possible and sits idling otherwise.
     \end{itemize}
 \end{frame}
 
@@ -24,6 +25,10 @@ emc = Mem.create_and_connect('/soc', 'mem',
         soc, width=32, depth=512)
         \end{python}
     \end{example}
+    \begin{itemize}
+        \item Creates a system slave of memory which is $width * depth$ bits in size.
+        \item In this case, each word is 4 bytes long.
+    \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -35,6 +40,14 @@ dmaready = Flag.create_and_connect('/soc', 'dmaready')
 Dma.create_channel(dma, 'tx', dmaready))
         \end{python}
     \end{example}
+    \begin{center}
+        \begin{tikzpicture}[start chain, align=center]
+            \tikzstyle{every on chain} = [join];
+            \node [on chain, draw] {memory};
+            \node [on chain, draw] {dma};
+            \node [on chain, draw] {project3\\slave};
+        \end{tikzpicture}
+    \end{center}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -99,6 +112,10 @@ cpu_dsp = DspFlowController.create_and_connect(
 net = DspFlow.create_net(dsp, 'signal', width=32, depth=512)
         \end{python}
     \end{example}
+    \begin{itemize}
+        \item The net now has a depth too, unlike in the FPGA.
+        \item This is known as a FIFO, ring, or circular buffer.
+    \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -135,10 +152,11 @@ def test_project3():
     ...
     while True:
         yield daemon.step()
-        if <some condition>:
-            raise StopSimulation
         \end{python}
     \end{example}
+    \begin{itemize}
+        \item The DSP Flow Controller mimicks how poll() works on a POSIX system.
+    \end{itemize}
 \end{frame}
 
 \section{DSP In Practice}
@@ -205,6 +223,16 @@ def test_project3():
     \end{center}
 \end{frame}
 
+\begin{frame}{Result}
+    \begin{center}
+        \includegraphics[width=.7\textwidth]{img/test_project3.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Signals}
+    \includegraphics[width=\textwidth]{img/gtkwave-project3.png}
+\end{frame}
+
 \begin{frame}{Homework}
     \begin{itemize}
         \item Modify the FPGA DSP flowgraph to include a FIR filter;
@@ -218,6 +246,18 @@ def test_project3():
         \item We saw all of the parts of a System on a Chip
         \item We looked at how to use Python to glue a complex system together
         \item We explored some basics of Digital Signal Processing and how to use it
-        \item Next up is to use these tools to build \emph{The HT of the Future}!
+        \item Next up is to use these tools to build \emph{The HT of the Future} or a robot or anything you can imagine!
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Thank You}
+    \begin{itemize}
+        \item TAPR - Steve, George, Scotty, Tom, John
+        \item Bruce Perens
+        \item Gary Pearce from Ham Radio NOW
+        \item Tim Shepard
+        \item Aaron Schulman
+        \item My parents, grandparents, aunt and brother
+        \item Miss Sara
     \end{itemize}
 \end{frame}

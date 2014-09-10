@@ -3,6 +3,7 @@
 \subsection{The System Bus}
 
 \begin{frame}[fragile]
+    \frametitle{Goal}
     Goal of this section is to build project1 from the bottom up.
     \begin{center}
         \input{img/project1-resource-tree.latex}
@@ -265,6 +266,7 @@ resetn = Reset.create_and_connect('/', 'resetn', async=False)
 \subsection{project 1}
 
 \begin{frame}[fragile]
+    \frametitle{The LED}
     Goal of project 1 is to blink an LED; a good first project.
 
     \begin{example}
@@ -305,6 +307,7 @@ assert pbus.rdata == 0xDEADBEEF
     \end{example}
     \begin{itemize}
         \item Implements the bus transaction interface.
+        \item Like the real ARM buses, throws an exception if reads and writes are not word aligned.
     \end{itemize}
 \end{frame}
 
@@ -390,8 +393,8 @@ uint32_t val = *reg; // Store
 \begin{frame}{Why Test}
     \begin{block}{}
         Testing lets you make sure that future changes don't break exisitng code.
-        In other words, it's the \em{foundation} on which to architect your project.
-        This is called Test Driven Development.
+        In other words, it's the \emph{foundation} on which to architect your project.
+        This is called \emph{Test Driven Development}.
     \end{block}
 \end{frame}
 
@@ -458,11 +461,12 @@ system.dispatch('/soc/test_project1.vcd')   # Run the simulation
         \begin{itemize}
             \item python
             \item git
+            \item gtkwave
             \item python-virtualenv, python-pip
         \end{itemize}
     \end{block}
     \begin{example}
-\$ apt-get install python git-core python-virtual-env python-pip \\
+\$ apt-get install python git-core python-virtualenv python-pip gtkwave \\
 \$ git clone https://github.com/testaco/dcc2014.git \\
 \$ cd dcc2014 \\
 \$ virtualenv env \\

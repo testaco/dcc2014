@@ -1,4 +1,4 @@
-all: exampleplt.png fourierplt.png project1-resource-tree.latex project2-resource-tree.latex project3-resource-tree.latex test_project2.png fir.png
+all: exampleplt.png fourierplt.png project1-resource-tree.latex project2-resource-tree.latex project3-resource-tree.latex test_project2.png fir.png test_project3.png
 
 project1:
 	make -C ../../projects project1
@@ -17,6 +17,9 @@ project2-resource-tree.latex: project2
 
 test_project2.png: project2
 	cp ../../projects/test_project2.png .
+
+test_project3.png: project3
+	cp ../../projects/test_project3.png .
 
 project3-resource-tree.latex: project3
 	cp ../../projects/project3-resource-tree.latex .

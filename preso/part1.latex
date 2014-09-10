@@ -160,8 +160,10 @@
         \item Not fully integrated with the app processor.
         \item Thanks to Bruce Perens K6BP I now have access to the right equpiment to see what the device is doing.
         \item Extremely difficult/expensive to make it legal on all bands / all modes.
-        \item Come tomorrow to see how we're going to get from Whitebox Bravo to the Algoram HT of the Future.
     \end{itemize}
+    \begin{center}
+        \includegraphics[width=.3\textwidth]{img/am335x.jpg}
+    \end{center}
 \end{frame}
 
 \begin{frame}[shrink=50]
@@ -215,6 +217,7 @@
         \item To boss computers around
         \item Write programs that write programs
         \item Write programs that write programs that make real systems
+        \item Programming is leaving the virtual world and entering the real world
     \end{itemize}
 \end{frame}
 

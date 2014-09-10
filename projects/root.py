@@ -56,7 +56,8 @@ class OperatingSystem(object):
         nodes = []
         for node in node_paths:
             nodes.append(system.node_at_path(node).container)
-        t = traceSignals(simulation, self.soc, nodes, name=name)
+        traceSignals.name = name
+        t = traceSignals(simulation, self.soc, nodes)
         s = Simulation(t)
         s.run()
 
