@@ -1,0 +1,16 @@
+(This is the source code of both the presentation and the projects from the Tuson Amateur Packet Radio Digital Communications Conference, heled Sept 2014 in Austin Texas, USA.  The seminar was recorded and will be posted on YouTube soon.)
+
+Title: Introduction to SoC FPGA Programming for Mixed Signal Systems
+
+Abstract: The latest generation of Field Programmable Gate Arrays (FPGAs) offer an unprecedented level of integration, combining a full ARM processor with standard peripherals like USB and Ethernet on the same die as customizable logic. These Systems-on-a-Chip (or SoC's) are available from all major FPGA vendors, and they allow the hobbyist to hack together a state-of-the-art embedded system with all of the bells and whistles of a modern smartphone, all with minimal effort.
+
+In this seminar we'll cover the structure of these SoC FPGA's, from a high level discussion, down to the nitty gritty of designing and interfacing custom logic to meet your needs. We'll start with the basics like state machines, and end with integrating and processing real-world, mixed signals. The perfect setup to start you off on your next software radio or robotics project. This is not a vendor tool tutorial - all of the tools used are 100% Open Source. You'll go home with a set of working example projects that simulate the full concert of an embedded SoC FPGA, ready for your imagination to run wild.
+
+Seminar Outline:
+
+* Introduction, overview of embedded systems programming and Systems on a Chip.
+* The system bus & it's functional model. State Machines.
+* Testing and simulating a simple design with project1.
+* Intro to Mixed Signal processing and the DSP flowgraph.
+* Testing and simulating a hierarchical design with project2.
+* Making a DSP block, techniques for testing signal processing applications, explanation of project3
